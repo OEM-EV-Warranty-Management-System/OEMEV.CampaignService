@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace CampaignService_Repository.Models;
+namespace ClassLibrary1.Models;
 
 public partial class AppDbContext : DbContext
 {

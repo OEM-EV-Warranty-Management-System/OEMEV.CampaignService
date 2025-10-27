@@ -33,9 +33,18 @@ namespace CampaignService_Repository.Repositories
 
         public async Task<Campaign> AddAsync(Campaign campaign)
         {
-            _context.Campaigns.Add(campaign);
-            await _context.SaveChangesAsync();
-            return campaign;
+            try
+            {
+                campaign.IsActive = true; 
+                campaign.CreatedAt = DateTime.UtcNow;
+                _context.Campaigns.Add(campaign);
+                await _context.SaveChangesAsync();
+                return campaign;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         public async Task<Campaign> UpdateAsync(Campaign campaign)
@@ -48,9 +57,10 @@ namespace CampaignService_Repository.Repositories
         public async Task<bool> DeleteAsync(int id)
         {
             var campaign = await _context.Campaigns.FindAsync(id);
-            if (campaign == null) return false;
+            if (campaign == null || !campaign.IsActive == true)
+                return false;
 
-            _context.Campaigns.Remove(campaign);
+            campaign.IsActive = false;
             await _context.SaveChangesAsync();
             return true;
         }

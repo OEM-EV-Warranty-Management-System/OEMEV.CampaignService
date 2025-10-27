@@ -43,6 +43,7 @@ namespace CampaignService_Service.Services
         {
             var appointment = _mapper.Map<CampaignAppointment>(createAppointmentDto);
             appointment.CreatedAt = DateTime.UtcNow;
+            appointment.IsActive = true;
 
             var createdAppointment = await _unitOfWork.CampaignAppointments.AddAsync(appointment);
             await _unitOfWork.SaveChangesAsync();

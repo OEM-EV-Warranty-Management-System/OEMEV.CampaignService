@@ -46,6 +46,7 @@ namespace CampaignService_Service.Services
 
             var campaignVehicle = _mapper.Map<CampaignVehicle>(createVehicleDto);
             campaignVehicle.CreatedAt = DateTime.UtcNow;
+            campaignVehicle.IsActive = true;
 
             var createdVehicle = await _unitOfWork.CampaignVehicles.AddAsync(campaignVehicle);
             await _unitOfWork.SaveChangesAsync();

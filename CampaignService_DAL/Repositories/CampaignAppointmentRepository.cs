@@ -52,9 +52,10 @@ namespace CampaignService_Repository.Repositories
         public async Task<bool> DeleteAsync(int id)
         {
             var appointment = await _context.CampaignAppointments.FindAsync(id);
-            if (appointment == null) return false;
+            if (appointment == null || !appointment.IsActive == true) 
+                return false;
 
-            _context.CampaignAppointments.Remove(appointment);
+            appointment.IsActive = false;
             await _context.SaveChangesAsync();
             return true;
         }

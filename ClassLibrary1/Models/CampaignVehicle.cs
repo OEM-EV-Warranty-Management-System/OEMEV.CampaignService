@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CampaignService_Repository.Models;
+namespace ClassLibrary1.Models;
 
 public partial class CampaignVehicle
 {

@@ -50,9 +50,9 @@ namespace CampaignService_Repository.Repositories
         public async Task<bool> DeleteAsync(int id)
         {
             var vehicle = await _context.CampaignVehicles.FindAsync(id);
-            if (vehicle == null) return false;
+            if (vehicle == null || vehicle.IsActive == true) return false;
 
-            _context.CampaignVehicles.Remove(vehicle);
+            vehicle.IsActive = false;
             await _context.SaveChangesAsync();
             return true;
         }

@@ -33,6 +33,7 @@ namespace CampaignService_Service.Services
         {
             var campaign = _mapper.Map<Campaign>(createCampaignDto);
             campaign.CreatedAt = DateTime.UtcNow;
+            campaign.IsActive = true;
 
             var createdCampaign = await _unitOfWork.Campaigns.AddAsync(campaign);
             await _unitOfWork.SaveChangesAsync();
