@@ -112,10 +112,10 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // Remove or comment out this duplicate SwaggerGen configuration
-// builder.Services.AddSwaggerGen(c =>
-// {
-//     c.EnableAnnotations();
-// });
+builder.Services.AddSwaggerGen(c =>
+{
+    c.EnableAnnotations();
+});
 #endregion
 
 var app = builder.Build();
