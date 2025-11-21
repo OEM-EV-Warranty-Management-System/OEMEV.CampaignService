@@ -36,7 +36,22 @@ namespace CampaignService_Service.Services
             campaign.IsActive = true;
 
             var createdCampaign = await _unitOfWork.Campaigns.AddAsync(campaign);
-            await _unitOfWork.SaveChangesAsync();
+            try
+            {
+                await _unitOfWork.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                // Đặt Breakpoint (dấu chấm đỏ) tại dòng dưới này:
+                var inner = ex.InnerException;
+                while (inner != null)
+                {
+                    // Xem giá trị của inner.Message
+                    Console.WriteLine(inner.Message);
+                    inner = inner.InnerException;
+                }
+                throw;
+            }
 
             return _mapper.Map<CampaignDto>(createdCampaign);
         }
