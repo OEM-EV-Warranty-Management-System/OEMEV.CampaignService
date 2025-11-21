@@ -37,8 +37,9 @@ namespace CampaignService_Repository.Repositories
 
         public async Task<CampaignAppointment> AddAsync(CampaignAppointment appointment)
         {
-            _context.CampaignAppointments.Add(appointment);
+            await _context.CampaignAppointments.AddAsync(appointment);
             await _context.SaveChangesAsync();
+
             return appointment;
         }
 
@@ -46,6 +47,7 @@ namespace CampaignService_Repository.Repositories
         {
             _context.CampaignAppointments.Update(appointment);
             await _context.SaveChangesAsync();
+
             return appointment;
         }
 

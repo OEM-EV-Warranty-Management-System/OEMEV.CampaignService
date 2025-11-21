@@ -35,8 +35,9 @@ namespace CampaignService_Repository.Repositories
 
         public async Task<CampaignVehicle> AddAsync(CampaignVehicle campaignVehicle)
         {
-            _context.CampaignVehicles.Add(campaignVehicle);
+            await _context.CampaignVehicles.AddAsync(campaignVehicle);
             await _context.SaveChangesAsync();
+
             return campaignVehicle;
         }
 
@@ -44,6 +45,7 @@ namespace CampaignService_Repository.Repositories
         {
             _context.CampaignVehicles.Update(campaignVehicle);
             await _context.SaveChangesAsync();
+
             return campaignVehicle;
         }
 

@@ -37,8 +37,10 @@ namespace CampaignService_Repository.Repositories
             {
                 campaign.IsActive = true; 
                 campaign.CreatedAt = DateTime.UtcNow;
-                _context.Campaigns.Add(campaign);
+                await _context.Campaigns.AddAsync(campaign);
+
                 await _context.SaveChangesAsync();
+
                 return campaign;
             }
             catch (Exception ex)
@@ -51,6 +53,7 @@ namespace CampaignService_Repository.Repositories
         {
             _context.Campaigns.Update(campaign);
             await _context.SaveChangesAsync();
+
             return campaign;
         }
 
