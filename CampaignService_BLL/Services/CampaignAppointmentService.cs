@@ -3,6 +3,7 @@ using CampaignService_Repository.Interfaces;
 using CampaignService_Repository.Models;
 using CampaignService_Service.DTOs;
 using CampaignService_Service.Interfaces;
+using CampaignService_Service.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +34,7 @@ namespace CampaignService_Service.Services
             return _mapper.Map<IEnumerable<CampaignAppointmentDto>>(appointments);
         }
 
-        public async Task<CampaignAppointmentDto?> GetAppointmentByIdAsync(int id)
+        public async Task<CampaignAppointmentDto?> GetAppointmentByIdAsync(long id)
         {
             var appointment = await _unitOfWork.CampaignAppointments.GetByIdAsync(id);
             return _mapper.Map<CampaignAppointmentDto>(appointment);
@@ -42,8 +43,17 @@ namespace CampaignService_Service.Services
         public async Task<CampaignAppointmentDto> CreateAppointmentAsync(CreateAppointmentDto createAppointmentDto)
         {
             var appointment = _mapper.Map<CampaignAppointment>(createAppointmentDto);
+            
+            // Ensure ID is 0 for auto-generation
+            appointment.Id = 0;
             appointment.CreatedAt = DateTime.UtcNow;
             appointment.IsActive = true;
+            
+            // Set default status if not provided
+            if (string.IsNullOrEmpty(appointment.Status))
+            {
+                appointment.Status = AppointmentStatus.Scheduled;
+            }
 
             var createdAppointment = await _unitOfWork.CampaignAppointments.AddAsync(appointment);
             await _unitOfWork.SaveChangesAsync();
@@ -54,7 +64,7 @@ namespace CampaignService_Service.Services
             return appointmentDto;
         }
 
-        public async Task<CampaignAppointmentDto?> UpdateAppointmentAsync(int id, CreateAppointmentDto updateAppointmentDto)
+        public async Task<CampaignAppointmentDto?> UpdateAppointmentAsync(long id, CreateAppointmentDto updateAppointmentDto)
         {
             var existingAppointment = await _unitOfWork.CampaignAppointments.GetByIdAsync(id);
             if (existingAppointment == null) return null;
@@ -66,14 +76,14 @@ namespace CampaignService_Service.Services
             return _mapper.Map<CampaignAppointmentDto>(updatedAppointment);
         }
 
-        public async Task<bool> DeleteAppointmentAsync(int id)
+        public async Task<bool> DeleteAppointmentAsync(long id)
         {
             var result = await _unitOfWork.CampaignAppointments.DeleteAsync(id);
             await _unitOfWork.SaveChangesAsync();
             return result;
         }
 
-        public async Task<IEnumerable<CampaignAppointmentDto>> GetAppointmentsByCampaignVehicleIdAsync(int campaignVehicleId)
+        public async Task<IEnumerable<CampaignAppointmentDto>> GetAppointmentsByCampaignVehicleIdAsync(long campaignVehicleId)
         {
             var appointments = await _unitOfWork.CampaignAppointments.GetByCampaignVehicleIdAsync(campaignVehicleId);
             return _mapper.Map<IEnumerable<CampaignAppointmentDto>>(appointments);
@@ -99,6 +109,12 @@ namespace CampaignService_Service.Services
         public async Task<IEnumerable<CampaignAppointmentDto>> GetAppointmentsByDateRangeAsync(DateTime startDate, DateTime endDate)
         {
             var appointments = await _unitOfWork.CampaignAppointments.GetAppointmentsByDateRangeAsync(startDate, endDate);
+            return _mapper.Map<IEnumerable<CampaignAppointmentDto>>(appointments);
+        }
+
+        public async Task<IEnumerable<CampaignAppointmentDto>> GetAppointmentsByStatusAsync(string status)
+        {
+            var appointments = await _unitOfWork.CampaignAppointments.GetByStatusAsync(status);
             return _mapper.Map<IEnumerable<CampaignAppointmentDto>>(appointments);
         }
     }

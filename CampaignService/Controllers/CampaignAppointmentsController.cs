@@ -23,7 +23,7 @@ namespace CampaignService.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<CampaignAppointmentDto>> GetAppointmentById(int id)
+        public async Task<ActionResult<CampaignAppointmentDto>> GetAppointmentById(long id)
         {
             var appointment = await _campaignAppointmentService.GetAppointmentByIdAsync(id);
             if (appointment == null) return NotFound();
@@ -38,15 +38,36 @@ namespace CampaignService.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<CampaignAppointmentDto>> UpdateAppointment(int id, CreateAppointmentDto updateAppointmentDto)
+        public async Task<ActionResult<CampaignAppointmentDto>> UpdateAppointment(long id, CreateAppointmentDto updateAppointmentDto)
         {
             var appointment = await _campaignAppointmentService.UpdateAppointmentAsync(id, updateAppointmentDto);
             if (appointment == null) return NotFound();
             return Ok(appointment);
         }
 
+        [HttpPatch("{id}/status")]
+        public async Task<ActionResult<CampaignAppointmentDto>> UpdateAppointmentStatus(long id, [FromBody] UpdateAppointmentStatusDto statusDto)
+        {
+            var existingAppointment = await _campaignAppointmentService.GetAppointmentByIdAsync(id);
+            if (existingAppointment == null) return NotFound();
+
+            // Create a new CreateAppointmentDto with the updated status
+            var updateDto = new CreateAppointmentDto
+            {
+                AppointmentDate = existingAppointment.AppointmentDate,
+                CampaignVehicleId = existingAppointment.CampaignVehicleId,
+                ServiceCenterId = existingAppointment.ServiceCenterId,
+                TechnicianId = existingAppointment.TechnicianId,
+                Status = statusDto.Status
+            };
+
+            var appointment = await _campaignAppointmentService.UpdateAppointmentAsync(id, updateDto);
+            if (appointment == null) return NotFound();
+            return Ok(appointment);
+        }
+
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteAppointment(int id)
+        public async Task<ActionResult> DeleteAppointment(long id)
         {
             var result = await _campaignAppointmentService.DeleteAppointmentAsync(id);
             if (!result) return NotFound();
@@ -54,7 +75,7 @@ namespace CampaignService.Controllers
         }
 
         [HttpGet("campaign-vehicle/{campaignVehicleId}")]
-        public async Task<ActionResult<IEnumerable<CampaignAppointmentDto>>> GetAppointmentsByCampaignVehicleId(int campaignVehicleId)
+        public async Task<ActionResult<IEnumerable<CampaignAppointmentDto>>> GetAppointmentsByCampaignVehicleId(long campaignVehicleId)
         {
             var appointments = await _campaignAppointmentService.GetAppointmentsByCampaignVehicleIdAsync(campaignVehicleId);
             return Ok(appointments);
@@ -85,6 +106,13 @@ namespace CampaignService.Controllers
         public async Task<ActionResult<IEnumerable<CampaignAppointmentDto>>> GetAppointmentsByDateRange([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
         {
             var appointments = await _campaignAppointmentService.GetAppointmentsByDateRangeAsync(startDate, endDate);
+            return Ok(appointments);
+        }
+
+        [HttpGet("status/{status}")]
+        public async Task<ActionResult<IEnumerable<CampaignAppointmentDto>>> GetAppointmentsByStatus(string status)
+        {
+            var appointments = await _campaignAppointmentService.GetAppointmentsByStatusAsync(status);
             return Ok(appointments);
         }
     }

@@ -35,15 +35,16 @@ namespace CampaignService_Service.Interfaces
     public interface ICampaignAppointmentService
     {
         Task<IEnumerable<CampaignAppointmentDto>> GetAllAppointmentsAsync();
-        Task<CampaignAppointmentDto?> GetAppointmentByIdAsync(int id);
+        Task<CampaignAppointmentDto?> GetAppointmentByIdAsync(long id);
         Task<CampaignAppointmentDto> CreateAppointmentAsync(CreateAppointmentDto createAppointmentDto);
-        Task<CampaignAppointmentDto?> UpdateAppointmentAsync(int id, CreateAppointmentDto updateAppointmentDto);
-        Task<bool> DeleteAppointmentAsync(int id);
-        Task<IEnumerable<CampaignAppointmentDto>> GetAppointmentsByCampaignVehicleIdAsync(int campaignVehicleId);
+        Task<CampaignAppointmentDto?> UpdateAppointmentAsync(long id, CreateAppointmentDto updateAppointmentDto);
+        Task<bool> DeleteAppointmentAsync(long id);
+        Task<IEnumerable<CampaignAppointmentDto>> GetAppointmentsByCampaignVehicleIdAsync(long campaignVehicleId);
         Task<IEnumerable<CampaignAppointmentDto>> GetAppointmentsByVehicleIdAsync(long vehicleId);
         Task<IEnumerable<CampaignAppointmentDto>> GetAppointmentsByServiceCenterIdAsync(long serviceCenterId);
         Task<IEnumerable<CampaignAppointmentDto>> GetAppointmentsByTechnicianIdAsync(Guid technicianId);
         Task<IEnumerable<CampaignAppointmentDto>> GetAppointmentsByDateRangeAsync(DateTime startDate, DateTime endDate);
+        Task<IEnumerable<CampaignAppointmentDto>> GetAppointmentsByStatusAsync(string status);
     }
 
     public interface INotificationService

@@ -12,5 +12,6 @@ namespace CampaignService_Service.DTOs
         public long CampaignVehicleId { get; set; }
         public long ServiceCenterId { get; set; }
         public Guid TechnicianId { get; set; }
+        public string Status { get; set; }
     }
 }

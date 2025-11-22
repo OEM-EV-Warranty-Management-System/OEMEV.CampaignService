@@ -27,7 +27,7 @@ namespace CampaignService_Repository.Repositories
                 .ToListAsync();
         }
 
-        public async Task<CampaignAppointment?> GetByIdAsync(int id)
+        public async Task<CampaignAppointment?> GetByIdAsync(long id)
         {
             return await _context.CampaignAppointments
                 .Include(ca => ca.CampaignVehicle)
@@ -35,34 +35,29 @@ namespace CampaignService_Repository.Repositories
                 .FirstOrDefaultAsync(ca => ca.Id == id);
         }
 
-        public async Task<CampaignAppointment> AddAsync(CampaignAppointment appointment)
+        public Task<CampaignAppointment> AddAsync(CampaignAppointment appointment)
         {
-            await _context.CampaignAppointments.AddAsync(appointment);
-            await _context.SaveChangesAsync();
-
-            return appointment;
+            _context.CampaignAppointments.Add(appointment);
+            return Task.FromResult(appointment);
         }
 
-        public async Task<CampaignAppointment> UpdateAsync(CampaignAppointment appointment)
+        public Task<CampaignAppointment> UpdateAsync(CampaignAppointment appointment)
         {
             _context.CampaignAppointments.Update(appointment);
-            await _context.SaveChangesAsync();
-
-            return appointment;
+            return Task.FromResult(appointment);
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(long id)
         {
             var appointment = await _context.CampaignAppointments.FindAsync(id);
             if (appointment == null || !appointment.IsActive == true) 
                 return false;
 
             appointment.IsActive = false;
-            await _context.SaveChangesAsync();
             return true;
         }
 
-        public async Task<IEnumerable<CampaignAppointment>> GetByCampaignVehicleIdAsync(int campaignVehicleId)
+        public async Task<IEnumerable<CampaignAppointment>> GetByCampaignVehicleIdAsync(long campaignVehicleId)
         {
             return await _context.CampaignAppointments
                 .Include(ca => ca.CampaignVehicle)
@@ -109,6 +104,16 @@ namespace CampaignService_Repository.Repositories
                 .ThenInclude(cv => cv.Campaign)
                 .Where(ca => ca.AppointmentDate >= startDate && ca.AppointmentDate <= endDate)
                 .OrderBy(ca => ca.AppointmentDate)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<CampaignAppointment>> GetByStatusAsync(string status)
+        {
+            return await _context.CampaignAppointments
+                .Include(ca => ca.CampaignVehicle)
+                .ThenInclude(cv => cv.Campaign)
+                .Where(ca => ca.Status == status && ca.IsActive == true)
+                .OrderByDescending(ca => ca.CreatedAt)
                 .ToListAsync();
         }
     }

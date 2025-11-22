@@ -8,6 +8,7 @@ using CampaignService_Service.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Npgsql;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,7 +50,20 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 });
 #endregion
 
-builder.Services.AddControllers();
+// Configure JSON serialization to handle circular references
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.SerializerOptions.WriteIndented = true;
+});
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.WriteIndented = true;
+    });
+
 builder.Services.AddOpenApi();
 
 #region Dependency Injection (DI)
@@ -107,13 +121,6 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 
-    // Enable annotations if you have the Swashbuckle.Annotations package
-    // c.EnableAnnotations();
-});
-
-// Remove or comment out this duplicate SwaggerGen configuration
-builder.Services.AddSwaggerGen(c =>
-{
     c.EnableAnnotations();
 });
 #endregion

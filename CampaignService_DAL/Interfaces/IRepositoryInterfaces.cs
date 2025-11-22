@@ -46,15 +46,16 @@ namespace CampaignService_Repository.Interfaces
     public interface ICampaignAppointmentRepository
     {
         Task<IEnumerable<CampaignAppointment>> GetAllAsync();
-        Task<CampaignAppointment?> GetByIdAsync(int id);
+        Task<CampaignAppointment?> GetByIdAsync(long id);
         Task<CampaignAppointment> AddAsync(CampaignAppointment appointment);
         Task<CampaignAppointment> UpdateAsync(CampaignAppointment appointment);
-        Task<bool> DeleteAsync(int id);
-        Task<IEnumerable<CampaignAppointment>> GetByCampaignVehicleIdAsync(int campaignVehicleId);
+        Task<bool> DeleteAsync(long id);
+        Task<IEnumerable<CampaignAppointment>> GetByCampaignVehicleIdAsync(long campaignVehicleId);
         Task<IEnumerable<CampaignAppointment>> GetByVehicleIdAsync(long vehicleId);
         Task<IEnumerable<CampaignAppointment>> GetByServiceCenterIdAsync(long serviceCenterId);
         Task<IEnumerable<CampaignAppointment>> GetByTechnicianIdAsync(Guid technicianId);
         Task<IEnumerable<CampaignAppointment>> GetAppointmentsByDateRangeAsync(DateTime startDate, DateTime endDate);
+        Task<IEnumerable<CampaignAppointment>> GetByStatusAsync(string status);
     }
 
     public interface IServiceProviders

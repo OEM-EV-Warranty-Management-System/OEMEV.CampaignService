@@ -19,6 +19,8 @@ public partial class CampaignAppointment
 
     public Guid? TechnicianId { get; set; }
 
+    public string? Status { get; set; }
+
     public DateTime? CreatedAt { get; set; }
 
     public bool? IsActive { get; set; }

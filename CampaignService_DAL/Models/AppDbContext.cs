@@ -73,13 +73,18 @@ public partial class AppDbContext : DbContext
 
             entity.HasIndex(e => e.Id, "campaign_appointments_id_key").IsUnique();
 
-            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Id)
+                .HasColumnName("id")
+                .ValueGeneratedOnAdd();
             entity.Property(e => e.AppointmentDate).HasColumnName("appointment_date");
             entity.Property(e => e.CampaignVehicleId).HasColumnName("campaign_vehicle_id");
             entity.Property(e => e.CreatedAt).HasColumnName("created_at");
             entity.Property(e => e.IsActive).HasColumnName("is_active");
             entity.Property(e => e.ServiceCenterId).HasColumnName("service_center_id");
             entity.Property(e => e.TechnicianId).HasColumnName("technician_id");
+            entity.Property(e => e.Status)
+                .HasColumnType("character varying")
+                .HasColumnName("status");
 
             entity.HasOne(d => d.CampaignVehicle).WithMany(p => p.CampaignAppointments)
                 .HasForeignKey(d => d.CampaignVehicleId)

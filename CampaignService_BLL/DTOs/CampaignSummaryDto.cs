@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+using System;
 
 namespace CampaignService_Service.DTOs
 {
-    public class CampaignDto
+    /// <summary>
+    /// Simplified Campaign DTO to avoid circular references
+    /// </summary>
+    public class CampaignSummaryDto
     {
         public long Id { get; set; }
         public string Title { get; set; }
@@ -16,9 +14,5 @@ namespace CampaignService_Service.DTOs
         public DateTime EndDate { get; set; }
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
-        
-        // Ignore collections to prevent circular references
-        [JsonIgnore]
-        public ICollection<CampaignVehicleDto>? CampaignVehicles { get; set; }
     }
 }
